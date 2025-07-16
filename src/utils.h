@@ -3,11 +3,17 @@
 using namespace std;
 
 // Structure to hold order details
+struct OrderItemDetails {
+    int itemId; 
+    int quantity;
+};
+
 struct Order {
     int orderId;
-    int itemId;  // itemId to store the menu item associated with the order
     int totalItems;
     double totalPrice;
+    int itemLength; 
+    OrderItemDetails items[5]; 
 };
 
 // Global variables

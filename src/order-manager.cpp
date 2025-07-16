@@ -2,9 +2,6 @@
 #include <string>
 using namespace std;
 
-// Structure to hold order details (forward declaration)
-struct Order;
-
 // External global variables (defined in utils.cpp)
 extern Order orders[50];
 extern int totalOrders;
@@ -22,8 +19,8 @@ void viewOrderDetails();
 void deleteOrder();
 void deleteOrderConfirmation(int index);
 int viewAllOrders();
-void createNewOrder();
-void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, int& totalItems);
+void createNewOrder(int currentOrderItems);
+void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, int& totalItems, int& currentOrderItems);
 void orderManagement();
 void resetOrder(); 
 void resetOrderConfirmation();
@@ -61,6 +58,25 @@ void viewOrderDetails() {
     cout << "Order ID: " << orders[orderId - 1].orderId << endl;  // Use orders array to get details
     cout << "Total Items: " << orders[orderId - 1].totalItems << endl;
     cout << "Total Price: €" << orders[orderId - 1].totalPrice << endl;
+
+    cout << "\nThe Items in this order:\n" << endl; 
+
+    // Find the actual number of different items in the order
+    int itemCount = 0;
+    for (int i = 0; i < 5; i++) {
+        if (orders[orderId - 1].items[i].itemId != 0) {
+            itemCount++;
+        }
+    }
+
+    for (int idx = 0; idx < itemCount; idx++) {
+        cout << "Item ID: " << orders[orderId - 1].items[idx].itemId << endl; 
+        cout << "Item Name: " << itemNames[orders[orderId - 1].items[idx].itemId - 1] << endl;
+        cout << "Quantity: " << orders[orderId - 1].items[idx].quantity << endl;
+        cout << "-----" << endl;
+    }
+
+    cout << "Back to order management...\n" << endl; 
 
     orderManagement();
 }
@@ -193,8 +209,8 @@ void deleteOrder(){
         return orderManagement();
     }
 
-    if (orderId < 1 || orderId > totalMenuItems) {
-        cout << "Invalid item Id, please try again." << endl;
+    if (orderId < 1 || orderId > totalOrders) {
+        cout << "Invalid order Id, please try again." << endl;
         return;
     }
     int index = orderId - 1; //so the index starts from 0
@@ -205,8 +221,9 @@ void deleteOrder(){
 // Creating new order
 void createNewOrder() {
     int itemId;
-    int currentOrderTotal = 0; // Tracks the current order's total price
-    int totalItems = 0;        // Tracks the total number of items in the order
+    int currentOrderTotal = 0; 
+    int totalItems = 0;
+    int currentOrderItems = 0;       
 
     cout << "---------------------------------" << endl;
     cout << "---------------------------------" << endl;
@@ -217,41 +234,42 @@ void createNewOrder() {
     cout << "---------------------------------" << endl;
 
     cout << "Available Menu Items:" << endl;
-    menuList();  // Display the available menu items
+    menuList(); 
 
     cout << endl;
     cout << "---------------------------------" << endl;
     cout << "---------------------------------" << endl;
 
-    // Initialize a new order
     Order currentOrder;
-    currentOrder.orderId = totalOrders + 1;  // Setting order ID (incremental)
+    currentOrder.orderId = totalOrders + 1;
+    currentOrder.totalItems = 0;
+    currentOrder.totalPrice = 0;
+    // Initialize all items to 0
+    for (int i = 0; i < 5; i++) {
+        currentOrder.items[i].itemId = 0;
+        currentOrder.items[i].quantity = 0;
+    }
 
     while (true) {
         cout << "Current Order Total: €" << currentOrderTotal << endl;
         cout << "Enter Item ID to add (or 0 to finish order): ";
         cin >> itemId;
 
-        // If user presses 0, finalize the order and exit the loop
         if (itemId == 0) {
-
-            break;  // Exit the loop to prevent further input after finishing the order
+            break;
         }
 
-        // Validation: if itemId is invalid (out of bounds)
         if (itemId < 1 || itemId > totalMenuItems) {
             cout << "Invalid item ID. Please try again." << endl;
-            continue;  // Ask for a valid item ID
+            continue;
         }
 
-        // If itemId is valid, add the item to the order
-        addItemsToOrder(itemId, currentOrderTotal, currentOrder, totalItems);
+        addItemsToOrder(itemId, currentOrderTotal, currentOrder, totalItems, currentOrderItems);
     }
 }
 
 // Adding items to the order
-void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, int& totalItems) {
-
+void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, int& totalItems, int&currentOrderItems) {
     string itemName = itemNames[itemId - 1];
     double itemPrice = itemPrices[itemId - 1];
 
@@ -264,10 +282,16 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
     int quantity;
     cin >> quantity;
 
+    OrderItemDetails currentOrderDetails;
+    currentOrderDetails.itemId = itemId; 
+    currentOrderDetails.quantity = quantity;
+
+    currentOrder.items[currentOrderItems++] = currentOrderDetails;
+
     int itemTotal = itemPrice * quantity;
-    currentOrderTotal += itemTotal;  // Update the order total
-    currentOrder.totalItems += quantity;  // Update total items in the current order
-    totalItems += quantity; // Increment the local totalItems for this order
+    currentOrderTotal += itemTotal;  
+    currentOrder.totalItems += quantity;  
+    totalItems += quantity;
 
     cout << "Added to order: " << itemName << " x" << quantity << " = €" << itemTotal << endl;
     cout << "New Order Total: €" << currentOrderTotal << endl;
@@ -288,7 +312,7 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
 
     switch (choice) {
         case 1:
-            return; //will continue to add items
+            break;
 
         case 2:
             cout << "Thank you for your order!" << endl;
@@ -374,7 +398,7 @@ void resetOrderConfirmation() {
 
 
 // Resetting order
-void resetOrder(){
+void resetOrder() {
 
     cout << "--------------------------------" << endl;
     cout << "--------------------------------" << endl;
