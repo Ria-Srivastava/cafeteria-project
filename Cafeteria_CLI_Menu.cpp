@@ -37,16 +37,16 @@ int totalMenuItems = 12;
 
 // Making order list global variable to use for view all orders function
 void orderList() {
+    int totalItems;
     cout << "| Order ID | Total Items | Total Price |" << endl;
     cout << "----------------------------------------------" << endl;
 
-    // Debugging: Print out the number of orders before listing them
-    cout <<  "Total Orders Count: " << totalOrders << endl;
     for (int i = 0; i < totalOrders; i++) { // Loop through the orders
         cout << orders[i].orderId << " \t| "
              << orders[i].totalItems << " \t\t| €"
              << orders[i].totalPrice << endl;
     }
+    
 
     cout << "----------------------------------------------" << endl;
     cout << "Total Orders: " << totalOrders << endl;
@@ -252,14 +252,6 @@ void viewOrderDetails() {
     cout << "Order ID: " << orders[orderId - 1].orderId << endl;  // Use orders array to get details
     cout << "Total Items: " << orders[orderId - 1].totalItems << endl;
     cout << "Total Price: €" << orders[orderId - 1].totalPrice << endl;
-
-    cout << "Items in this Order:" << endl;
-
-
-    cout << "Item: " << itemNames[orders[orderId - 1].itemId - 1] << endl;
-    cout << "Price: €" << itemPrices[orders[orderId - 1].itemId - 1] << endl;
-    cout << "Quantity: " << orders[orderId - 1].totalItems << endl;
-
 
     orderManagement();
 }
