@@ -37,7 +37,6 @@ int totalMenuItems = 12;
 
 // Making order list global variable to use for view all orders function
 void orderList() {
-    int totalItems;
     cout << "| Order ID | Total Items | Total Price |" << endl;
     cout << "----------------------------------------------" << endl;
 
@@ -293,7 +292,7 @@ void viewAllOrders() {
             return;
 
         case 3:
-            return ;
+            return;
 
         default:
             cout << "Invalid choice, please try again. " << endl; 
@@ -340,6 +339,8 @@ void deleteOrderConfirmation(int index){
         cin >> choice; 
 
         if (choice == 1) {
+            // Subtract the deleted order's total price from the global orderTotal
+            orderTotal -= orders[index].totalPrice;
             for (int i = index; i < totalOrders - 1; i++) { // shifts orders to remove the selected one
                 orders[i] = orders[i + 1];
             }
@@ -414,8 +415,7 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
     int itemTotal = itemPrice * quantity;
     currentOrderTotal += itemTotal;  // Update the order total
     currentOrder.totalItems += quantity;  // Update total items in the current order
-
- 
+    totalItems += quantity; // Increment the local totalItems for this order
 
     cout << "Added to order: " << itemName << " x" << quantity << " = €" << itemTotal << endl;
     cout << "New Order Total: €" << currentOrderTotal << endl;
@@ -454,6 +454,7 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
             orders[totalOrders] = currentOrder;  
             totalOrders++;  // Increment the total number of orders
             orderTotal += currentOrderTotal;  // Add the current order's total to the overall total
+            totalItems += totalItems; // Update the global totalItems with the items from this order
 
             orderManagement();
             break;
@@ -463,6 +464,7 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
             currentOrderTotal = 0;
             currentOrder.totalItems = 0;  // resets total items if order gets cancelled
             currentOrder.totalPrice = 0; //resets total price
+            totalItems = 0; // reset local totalItems
             orderManagement();
             break;
 
