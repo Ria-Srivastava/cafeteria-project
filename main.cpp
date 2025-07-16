@@ -6,12 +6,11 @@
 #include "./src/order-manager.cpp"
 using namespace std;
 
-// Function declarations
+// Fn declaration
 void menuManagement();
 void orderManagement();
 
 //Main Menu for The Campus Crave
-// This code provides a command-line interface for managing a cafeteria menu and it's orders.
 int main() {
     int choice;
     do {

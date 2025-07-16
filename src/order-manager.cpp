@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-// External global variables (defined in utils.cpp)
+//global vars
 extern Order orders[50];
 extern int totalOrders;
 extern int orderTotal;
@@ -10,10 +10,9 @@ extern string itemNames[50];
 extern double itemPrices[50];
 extern int totalMenuItems;
 
-// External function from menu-manager.cpp
 extern void menuList();
 
-// Function declarations
+// Fn declaration
 void orderList();
 void viewOrderDetails();
 void deleteOrder();
@@ -25,21 +24,22 @@ void orderManagement();
 void resetOrder(); 
 void resetOrderConfirmation();
 
-// Making order list global variable to use for view all orders function
 void orderList() {
-    cout << "| Order ID | Total Items | Total Price |" << endl;
-    cout << "----------------------------------------------" << endl;
+    cout << " -------------------------------------" << endl;
+    cout << "| Order ID | Total Items | Total Price " << endl;
+    cout << " -------------------------------------" << endl;
 
-    for (int i = 0; i < totalOrders; i++) { // Loop through the orders
-        cout << orders[i].orderId << " \t| "
-             << orders[i].totalItems << " \t\t| €"
-             << orders[i].totalPrice << endl;
+    for (int i = 0; i < totalOrders; i++) {
+        printf("| %-8d | %-11d | €%10.2f\n", 
+               orders[i].orderId, 
+               orders[i].totalItems, 
+               orders[i].totalPrice);
     }
 
-    cout << "----------------------------------------------" << endl;
+    cout << "--------------------------------------" << endl;
     cout << "Total Orders: " << totalOrders << endl;
     cout << "Total Order Amount: €" << orderTotal << endl;
-    cout << "----------------------------------------------" << endl;
+    cout << "--------------------------------------" << endl;
 }
 
 void viewOrderDetails() {
@@ -49,13 +49,12 @@ void viewOrderDetails() {
     cout << "Enter Order ID to view details: ";
     cin >> orderId;
 
-    if (orderId < 1 || orderId > totalOrders) {  // Validating order ID
+    if (orderId < 1 || orderId > totalOrders) {  // order id shld be valid
         cout << "Invalid Order ID. Please try again." << endl;
-        return;  // to avoid further execution of invalid input
+        return;  
     }
 
-    // Display the order details
-    cout << "Order ID: " << orders[orderId - 1].orderId << endl;  // Use orders array to get details
+    cout << "Order ID: " << orders[orderId - 1].orderId << endl;  
     cout << "Total Items: " << orders[orderId - 1].totalItems << endl;
     cout << "Total Price: €" << orders[orderId - 1].totalPrice << endl;
 
@@ -81,7 +80,6 @@ void viewOrderDetails() {
     orderManagement();
 }
 
-// Viewing total number of orders
 int viewAllOrders() {
     int choice;
 
@@ -124,11 +122,11 @@ int viewAllOrders() {
         }
 
     } while (choice != 3);
+
     return 0;
 }
 
 
-// Deleting orders confirmation
 void deleteOrderConfirmation(int index){
     if (index < 0 || index >= totalOrders) {
         cout << "Invalid order index!" << endl;
@@ -164,18 +162,18 @@ void deleteOrderConfirmation(int index){
         cin >> choice;
 
         if (choice == 1) {
-            // Subtract the deleted order's total price from the global orderTotal
+            //subtract the deleted orders price 
             orderTotal -= orders[index].totalPrice;
-            for (int i = index; i < totalOrders - 1; i++) { // shifts orders to remove the selected one
+            for (int i = index; i < totalOrders - 1; i++) { 
                 orders[i] = orders[i + 1];
             }
             totalOrders--;
 
             cout << "Your order has been successfully deleted!" << endl;
-            break; // exits the loop and goes back to order management
+            break; //to go back to order management
         } else if (choice == 2) {
             cout << "Order deletion is cancelled." << endl;
-            break; // exits the loop and goes back to order management
+            break; //to go back to order management
         } else {
             cout << "Invalid choice. Please try again." << endl;
         }
@@ -184,7 +182,6 @@ void deleteOrderConfirmation(int index){
     orderManagement();
 }
 
-// Delete orders
 void deleteOrder(){
     int orderId;
 
@@ -213,17 +210,17 @@ void deleteOrder(){
         cout << "Invalid order Id, please try again." << endl;
         return;
     }
-    int index = orderId - 1; //so the index starts from 0
+    int index = orderId - 1; //making sure the ind starts from 0
 
     return deleteOrderConfirmation(index);
 }
 
-// Creating new order
 void createNewOrder() {
     int itemId;
     int currentOrderTotal = 0; 
     int totalItems = 0;
-    int currentOrderItems = 0;       
+    int currentOrderItems = 0;            
+
 
     cout << "---------------------------------" << endl;
     cout << "---------------------------------" << endl;
@@ -234,7 +231,9 @@ void createNewOrder() {
     cout << "---------------------------------" << endl;
 
     cout << "Available Menu Items:" << endl;
+
     menuList(); 
+
 
     cout << endl;
     cout << "---------------------------------" << endl;
@@ -244,7 +243,8 @@ void createNewOrder() {
     currentOrder.orderId = totalOrders + 1;
     currentOrder.totalItems = 0;
     currentOrder.totalPrice = 0;
-    // Initialize all items to 0
+
+
     for (int i = 0; i < 5; i++) {
         currentOrder.items[i].itemId = 0;
         currentOrder.items[i].quantity = 0;
@@ -291,7 +291,8 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
     int itemTotal = itemPrice * quantity;
     currentOrderTotal += itemTotal;  
     currentOrder.totalItems += quantity;  
-    totalItems += quantity;
+    totalItems += quantity; 
+
 
     cout << "Added to order: " << itemName << " x" << quantity << " = €" << itemTotal << endl;
     cout << "New Order Total: €" << currentOrderTotal << endl;
@@ -321,16 +322,15 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
             currentOrder.totalPrice = currentOrderTotal;
             currentOrder.totalItems = totalItems;
 
-            // Debugging: Print out order details to check if it's correctly created
             cout << "Order ID: " << currentOrder.orderId << endl;
             cout << "Total Items: " << currentOrder.totalItems << endl;
             cout << "Total Price: €" << currentOrder.totalPrice << endl;
 
-            // Add the current order to the global orders array
+            //add curr order to orders array
             orders[totalOrders] = currentOrder;
-            totalOrders++;  // Increment the total number of orders
-            orderTotal += currentOrderTotal;  // Add the current order's total to the overall total
-            totalItems += totalItems; // Update the global totalItems with the items from this order
+            totalOrders++;  
+            orderTotal += currentOrderTotal;  
+            totalItems += totalItems; 
 
             orderManagement();
             break;
@@ -338,9 +338,9 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
         case 3:
             cout << "\nYour Order has been Cancelled." << endl;
             currentOrderTotal = 0;
-            currentOrder.totalItems = 0;  // resets total items if order gets cancelled
-            currentOrder.totalPrice = 0; //resets total price
-            totalItems = 0; // reset local totalItems
+            currentOrder.totalItems = 0;  
+            currentOrder.totalPrice = 0;
+            totalItems = 0; 
             orderManagement();
             break;
 
@@ -350,7 +350,6 @@ void addItemsToOrder(int itemId, int& currentOrderTotal, Order& currentOrder, in
     }
 }
 
-//Resetting order Confirmation
 void resetOrderConfirmation() {
     int choice;
 
@@ -384,11 +383,11 @@ void resetOrderConfirmation() {
             orderTotal = 0;
             totalItems = 0;
             cout << "All orders have been reset!" << endl;
-            break; // Exit the loop after resetting
+            break; //exit after resetting 
 
         } else if (choice == 2) {
             cout << "Reset cancelled." << endl;
-            break; // Exit the loop and return
+            break; 
 
         } else {
             cout << "Invalid choice. Please try again." << endl;
@@ -397,8 +396,8 @@ void resetOrderConfirmation() {
 }
 
 
-// Resetting order
-void resetOrder() {
+
+void resetOrder(){
 
     cout << "--------------------------------" << endl;
     cout << "--------------------------------" << endl;
@@ -445,10 +444,10 @@ void resetOrder() {
     }
 }
 
-//Order Management Function
 void orderManagement() {
     int option;
-    do { // Loops to show menu management options until user goes back to the main menu
+
+    do { 
         cout << "---------------------------------" << endl;
         cout << "---------------------------------" << endl;
 
@@ -472,19 +471,19 @@ void orderManagement() {
         switch (option) {
             case 1:
                 cout << "Creating new order..." << endl;
-                createNewOrder();  // Call function to create new order
+                createNewOrder();  //function to create new order
                 break;
 
             case 2:
                 cout << "Viewing all orders..." << endl;
                 if (viewAllOrders() == 1) {
-                    option = 5;
+                    return;
                 }
                 break;
 
             case 3:
                 cout << "Deleting orders..." << endl;
-                deleteOrder();  // Call function to delete orders (you need to implement this function)
+                deleteOrder();  //function to delete orders
                 break;
 
             case 4:
@@ -494,10 +493,12 @@ void orderManagement() {
 
             case 5:
                 cout << "Going back to Main Menu..." << endl;
-                return; // Exit the loop and return to the main menu
+                return; 
 
             default:
                 cout << "Invalid option. Please try again." << endl;
         }
-    } while (option != 5); // Loops until the user chooses to go back to main menu
+    } while (option != 5);
+
+    return;
 }

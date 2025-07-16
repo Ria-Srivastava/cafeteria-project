@@ -3,12 +3,12 @@
 #include <limits>
 using namespace std;
 
-// External global variables (defined in utils.cpp)
+//global vars
 extern string itemNames[50];
 extern double itemPrices[50];
 extern int totalMenuItems;
 
-// Function declarations
+//func declaration
 int viewMenu(); 
 int updateMenuItem(); 
 void menuManagement();
@@ -18,16 +18,15 @@ int deleteItemConfirmation(int index);
 void addMenuItem();
 int updateConfirmation(int index);
 
-// Menu List 
 void menuList() {
 
     cout << "ID \t| Item Name, Price" << endl;
     cout << "--------------------------" << endl;
 
-    for (int i = 0; i < totalMenuItems; i++) { //loops the menu items to desplay them 
+    for (int i = 0; i < totalMenuItems; i++) { //display all menu items 
         cout << (i + 1) << "  \t| " << itemNames[i];
         if (itemPrices[i] > 0) {
-            cout << ", €" << itemPrices[i] << endl; //adds the item price to the menu list 
+            cout << ", €" << itemPrices[i] << endl; 
         } else {
             cout << endl;
         }
@@ -38,8 +37,7 @@ void menuList() {
     cout << "-----------------------------" << endl;
 }
 
-// Function to display the menu
-int viewMenu() { //view menu function 
+int viewMenu() {  
     int option;
     
     cout << "---------------------------------" << endl;
@@ -48,7 +46,7 @@ int viewMenu() { //view menu function
     cout << "---------------------------------" << endl;
     cout << "---------------------------------" << endl;
     
-    menuList(); //calls the menuList function to display the menu items
+    menuList(); //displays all menu items
     
     cout << "-----------------------------" << endl;
     cout << "1. Back to Menu Management" << endl;
@@ -62,15 +60,14 @@ int viewMenu() { //view menu function
     switch (option) {
         case 1:
             cout << "Returning to Menu Management..." << endl;
-            return 0; // returns to the calling function (menuManagement)
+            return 0; //return to menu management
         case 2:
             cout << "Returning to Main Menu" << endl;
-            return 1; //goes back to the main menu
+            return 1; //return to main menu
     }
     return 1;
 }
 
-// Add New Menu Item
 void addMenuItem(){
     int choice;
 
@@ -91,7 +88,7 @@ void addMenuItem(){
 
         string itemName;
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); //clears the input buffer 
-        getline(cin, itemName); // gets the item name from user input
+        getline(cin, itemName); //get the item name from user
 
         cout << endl;
 
@@ -99,7 +96,7 @@ void addMenuItem(){
         cout << "Item Price: ";
 
         double itemPrice;
-        cin >> itemPrice; // gets the item price from user input
+        cin >> itemPrice; // get the item price from user 
 
         cout << "--------------------------------" << endl;
         cout << "--------------------------------" << endl;
@@ -125,7 +122,7 @@ void addMenuItem(){
 
             case 2:
                 cout << "Going back to Menu Management..." << endl; 
-            return; // returns to the calling function (menuManagement)
+            return; //return to menu management
 
             default:
                 cout << "Invalid option. Please try again." << endl;
@@ -135,7 +132,6 @@ void addMenuItem(){
     }
 }
 
-//confirmation for deleting menu item 
 int deleteItemConfirmation(int index){
     int choice;
 
@@ -166,10 +162,10 @@ int deleteItemConfirmation(int index){
 
     if (choice == 1) {
         for (int i = index; i < totalMenuItems - 1; i++) {
-            itemNames[i] = itemNames[i+1]; //shifts the menu items so the deleted item is removed
+            itemNames[i] = itemNames[i+1]; //shift items to remove deleted menu item
             itemPrices[i] = itemPrices[i+1]; 
         }
-        totalMenuItems--; //decreases the total menu items by 1
+        totalMenuItems--; 
 
         cout << " Your item has been successfully deleted!" << endl; 
 
@@ -185,10 +181,9 @@ int deleteItemConfirmation(int index){
     return 0;
 }
 
-// Delete Menu Item
 int deleteMenuItem(){
     int itemId;
-    int index = itemId - 1; //so the index starts from 0
+    int index = itemId - 1; 
 
     cout << "--------------------------------" << endl;
     cout << "--------------------------------" << endl;
@@ -219,7 +214,6 @@ int deleteMenuItem(){
     return deleteItemConfirmation(index);
 }
 
-//Confirmation for updating menu item
 int updateConfirmation(int index){
     int choice;
 
@@ -232,7 +226,7 @@ int updateConfirmation(int index){
     cout << "--------------------------------" << endl;
 
     cout << "Old Details: " << endl; 
-    cout << "Item name: " << itemNames[index] << endl; //index[0] is a placeholder for first item in menu 
+    cout << "Item name: " << itemNames[index] << endl; 
     cout << "item Price: €" << itemPrices[index] << endl;
 
     cout << endl;
@@ -256,19 +250,18 @@ int updateConfirmation(int index){
 
     if (choice == 1) {
         cout << "Changes have successfully been made!" << endl;
-        return 0; //returns to updateMenuItem ()
+        return 0; //return to updateMenuItem ()
 
     } else if (choice == 2) {
         cout << "Changes have been cancelled." << endl;
-        return 0; //returns to updateMenuItem()
+        return 0; // return to updateMenuItem()
     } else {
         cout << "Invalid choice. Please try again." << endl;
-        return updateConfirmation(index); //calls this function again till a valid choice is made by the user 
+        return updateConfirmation(index); //call until valid chaoice by user
 
     }
 }
 
-// Update Menu Item 
 int updateMenuItem(){
     int itemID;
     int choice;
@@ -281,7 +274,7 @@ int updateMenuItem(){
     cout << "--------------------------------" << endl;
     cout << "--------------------------------" << endl;
 
-   menuList(); //calls the menuList function to display the menu items
+   menuList(); //display menu items
     
 
     cout << "Enter item ID to update (or 0 to go back): ";
@@ -334,13 +327,12 @@ int updateMenuItem(){
         cout << "Invalid item ID, please try again." << endl;
         return 0;
     }
-    return updateConfirmation(index); //calls the updateConfirmation function to confirm the updates
+    return updateConfirmation(index); //to confirm the updates
 }
 
-//Menu Management Function
 void menuManagement() { 
     int option;
-    do { //loops to show menu management options until user goes back to main menu
+    do { 
 
     cout << "---------------------------------" << endl;
     cout << "---------------------------------" << endl;
@@ -365,32 +357,32 @@ void menuManagement() {
             case 1:
                 cout << "Viewing menu items..." << endl;
                 if (viewMenu() == 1){
-                    option = 5; //exits menuMangement function and returns to main menu
+                    option = 5; //return to main menu
                 }
-                break; //stops the excution of switch statementi if case 1 is selected
+                break; 
 
             case 2:
                 cout << "Adding a new menu item..." << endl;
                 addMenuItem();
-                break; //stops the excution of switch statementi if case 2 is selected
+                break; 
             
             case 3:
                 cout << "Updating a menu item..." << endl;
                 updateMenuItem();
-                break; //stops the excution of switch statementi if case 3 is selected
+                break; 
             
             case 4:
                 cout << "Deleting a menu item..." << endl;
                 deleteMenuItem();
-                break; //stops the excution of switch statementi if case 4 is selected  
+                break; 
            
             case 5:
                 cout << "Returning to Main Menu..." << endl;
-                break; //stops the excution of switch statementi if case 5 is selected
+                break; 
            
             default:
                 cout << "Invalid option. Please try again." << endl;
         }
     } 
-    while (option != 5); // loops until the user chooses to go back to main menu 
+    while (option != 5); 
 }                  
